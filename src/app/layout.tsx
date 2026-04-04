@@ -28,7 +28,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 /* ── Site config ─────────────────────────────────────────────────── */
-const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL ?? "https://shazadar.com";
+const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.shazadar.com";
 const SITE_NAME = "Shazad Arshad";
 
 /* 50-60 chars — shows fully in Google title */
