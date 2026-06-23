@@ -29,6 +29,7 @@ export default function Hero() {
       );
 
       animate(".hero__meta", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, ease: EASE });
+      animate(".hero__content-right", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, delay: 0.1, ease: EASE });
       animate(".hero__stats", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, delay: 0.15, ease: EASE });
     };
 
@@ -57,49 +58,57 @@ export default function Hero() {
         SHAZAD
       </motion.div>
 
-      {/* Center column */}
-      <div className="hero__center">
-        {/* Status pill */}
-        <div
-          className="hero__badge"
-          role="status"
-          aria-label="Currently available for work"
-          style={{ opacity: 0 }}
-        >
-          <span className="hero__status-dot" aria-hidden="true" />
-          Available for work
-        </div>
+      {/* Split Layout Column */}
+      <div className="hero__center" style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", textAlign: "left" }}>
 
-        {/* Headline */}
-        <h1 className="hero__headline">
-          <span className="hero__word">
-            <span className="hero__word-inner">Building Things</span>
-          </span>
-          <span className="hero__word">
-            <span className="hero__word-inner">
-              People Love
-              <span className="hero__cursor" aria-hidden="true">_</span>
-            </span>
-          </span>
-        </h1>
-
-        {/* Meta — subtitle + CTAs */}
-        <div className="hero__meta" style={{ opacity: 0 }}>
-          <p className="hero__subtitle">
-            Student &amp; Developer based in Colombo, Sri Lanka —
-            crafting fast, beautiful web experiences.
-          </p>
-
-          <div className="hero__ctas">
-            <Button href="#work" variant="solid">View My Work →</Button>
-            <a href="/cv.pdf" download className="link-draw" aria-label="Download CV">
-              Download CV
-            </a>
+        <div className="hero__content-left" style={{ flex: 1, minWidth: "300px" }}>
+          {/* Status pill */}
+          <div
+            className="hero__badge"
+            role="status"
+            aria-label="Currently available for work"
+            style={{ opacity: 0, marginBottom: "2rem" }}
+          >
+            <span className="hero__status-dot" aria-hidden="true" />
+            Available for work
           </div>
 
-          <p className="hero__social-proof">
-            50+ projects delivered · 3+ years experience · 100% client satisfaction
-          </p>
+          {/* Headline */}
+          <h1 className="hero__headline" style={{ alignItems: "flex-start", maxWidth: "100%" }}>
+            <span className="hero__word">
+              <span className="hero__word-inner">Designing &</span>
+            </span>
+            <span className="hero__word">
+              <span className="hero__word-inner">
+                Building Futures
+                <span className="hero__cursor" aria-hidden="true">_</span>
+              </span>
+            </span>
+          </h1>
+
+          {/* Meta — subtitle + CTAs */}
+          <div className="hero__meta" style={{ opacity: 0, alignItems: "flex-start" }}>
+            <p className="hero__subtitle" style={{ textAlign: "left" }}>
+              Creative Developer based in Colombo, Sri Lanka.
+              <br/>Turning complex problems into elegant, glassmorphic web experiences.
+            </p>
+
+            <div className="hero__ctas">
+              <Button href="#work" variant="solid">Explore Portfolio</Button>
+              <a href="#contact" className="link-draw" aria-label="Let's Talk">
+                Let&apos;s Talk
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div className="hero__content-right glass-card" style={{ flex: 0.8, minWidth: "300px", padding: "2rem", display: "flex", flexDirection: "column", justifyContent: "center", opacity: 0 }} >
+            <h3 style={{fontFamily: "var(--font-display)", fontSize: "1.5rem", marginBottom: "1rem"}}>Quick Facts</h3>
+            <ul style={{listStyle: "none", display: "flex", flexDirection: "column", gap: "1rem", fontFamily: "var(--font-body)", color: "var(--ink)"}}>
+              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Modern React & Next.js</li>
+              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Intuitive UI/UX Design</li>
+              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Performance Optimized</li>
+            </ul>
         </div>
       </div>
 
