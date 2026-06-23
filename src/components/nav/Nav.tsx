@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useScroll, animate, stagger } from "motion/react";
 import Link from "next/link";
+import Magnetic from "@/components/ui/Magnetic";
 
 const NAV_LINKS = [
   { label: "Work", href: "#work", id: "work" },
@@ -116,20 +117,24 @@ export default function Nav() {
         <ul className="nav__links" role="list">
           {NAV_LINKS.map(({ label, href, id }) => (
             <li key={href}>
-              <Link
-                href={href}
-                className={`nav__link${activeSection === id ? " nav__link--active" : ""}`}
-                aria-current={activeSection === id ? "true" : undefined}
-              >
-                {label}
-              </Link>
+              <Magnetic strength={20}>
+                <Link
+                  href={href}
+                  className={`nav__link${activeSection === id ? " nav__link--active" : ""}`}
+                  aria-current={activeSection === id ? "true" : undefined}
+                >
+                  {label}
+                </Link>
+              </Magnetic>
             </li>
           ))}
         </ul>
 
-        <Link href="#contact" className="nav__hire">
-          Hire Me
-        </Link>
+        <Magnetic strength={30}>
+          <Link href="#contact" className="nav__hire">
+            Hire Me
+          </Link>
+        </Magnetic>
 
         <button
           className="nav__burger"

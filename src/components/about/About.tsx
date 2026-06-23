@@ -88,6 +88,28 @@ function FadeUp({
   );
 }
 
+function RevealText({ text, delay = 0, className, style }: { text: string; delay?: number, className?: string, style?: React.CSSProperties }) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10%" });
+
+  return (
+    <h2 ref={ref} className={className} style={style}>
+      {text.split(" ").map((word, i) => (
+        <span key={i} style={{ display: "inline-block", overflow: "hidden", marginRight: "0.25em", verticalAlign: "bottom" }}>
+          <motion.span
+            style={{ display: "inline-block" }}
+            initial={{ y: "100%" }}
+            animate={inView ? { y: 0 } : { y: "100%" }}
+            transition={{ duration: 0.6, delay: delay + (i * 0.05), ease: EASE }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </h2>
+  );
+}
+
 export default function About() {
   return (
     <section id="about" className="section" aria-labelledby="about-heading">
@@ -105,13 +127,11 @@ export default function About() {
         >
           {/* Main Intro Card */}
           <FadeUp delay={0} className="glass-card" style={{ padding: "2.5rem", gridColumn: "1 / -1", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <h2
-                id="about-heading"
+              <RevealText
+                text="Student, developer & problem solver"
                 className="section__heading"
                 style={{ marginBottom: "1.25rem" }}
-              >
-                Student, developer &amp; problem solver
-              </h2>
+              />
 
               <p
                 style={{
