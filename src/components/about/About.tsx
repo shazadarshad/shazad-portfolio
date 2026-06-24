@@ -88,41 +88,59 @@ function FadeUp({
   );
 }
 
+function RevealText({ text, delay = 0, className, style }: { text: string; delay?: number, className?: string, style?: React.CSSProperties }) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10%" });
+
+  return (
+    <h2 ref={ref} className={className} style={style}>
+      {text.split(" ").map((word, i) => (
+        <span key={i} style={{ display: "inline-block", overflow: "hidden", marginRight: "0.25em", verticalAlign: "bottom" }}>
+          <motion.span
+            style={{ display: "inline-block" }}
+            initial={{ y: "100%" }}
+            animate={inView ? { y: 0 } : { y: "100%" }}
+            transition={{ duration: 0.6, delay: delay + (i * 0.05), ease: EASE }}
+          >
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </h2>
+  );
+}
+
 export default function About() {
   return (
     <section id="about" className="section" aria-labelledby="about-heading">
       <SectionLabel number="02" label="About Me" />
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(3rem, 6vw, 5rem)" }}>
-        {/* Top two-col */}
+        {/* Bento Grid Layout */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "clamp(2.5rem, 5vw, 4rem)",
-            alignItems: "start",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "1rem",
+            alignItems: "stretch",
           }}
         >
-          {/* Left col */}
-          <div>
-            <FadeUp delay={0}>
-              <h2
-                id="about-heading"
+          {/* Main Intro Card */}
+          <FadeUp delay={0} className="glass-card" style={{ padding: "2.5rem", gridColumn: "1 / -1", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <RevealText
+                text="Student, developer & problem solver"
                 className="section__heading"
                 style={{ marginBottom: "1.25rem" }}
-              >
-                Student, developer &amp; problem solver
-              </h2>
-            </FadeUp>
+              />
 
-            <FadeUp delay={0.1}>
               <p
                 style={{
                   fontFamily: "var(--font-body)",
-                  fontSize: "0.9375rem",
-                  lineHeight: "1.75",
+                  fontSize: "1.05rem",
+                  lineHeight: "1.8",
                   color: "var(--ink)",
-                  marginBottom: "1.5rem",
+                  marginBottom: "2rem",
+                  maxWidth: "70ch"
                 }}
               >
                 I&apos;m <strong>Shazad Arshad</strong> — a Computer Science
@@ -142,46 +160,29 @@ export default function About() {
                   </span>
                 ))}
               </div>
-            </FadeUp>
-          </div>
-
-          {/* Right col: geo composition */}
-          <FadeUp
-            delay={0.2}
-            ariaHidden
-            style={{ display: "flex", justifyContent: "center", padding: "1.5rem 1.5rem 3rem 1rem" }}
-          >
-            <div className="about-geo">
-              <div className="about-geo__outer" />
-              <div className="about-geo__inner">
-                <span className="about-geo__years">3+</span>
-                <span className="about-geo__exp">YEARS</span>
-              </div>
-            </div>
           </FadeUp>
-        </div>
 
-        {/* Services grid */}
-        <FadeUp delay={0.05}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: "1rem",
-            }}
-          >
-            {SERVICES.map((s) => (
-              <div key={s.num} className="service-card">
-                <div style={{ marginBottom: "1.25rem", color: "var(--accent-soft)" }}>
+          {/* Services mapping integrated into the Bento grid */}
+          {SERVICES.map((s, idx) => (
+            <FadeUp key={s.num} delay={0.1 + (idx * 0.05)} className="service-card" style={{ minHeight: "220px", display: "flex", flexDirection: "column" }}>
+                <div style={{ marginBottom: "auto", color: "var(--accent)", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   {s.icon}
+                  <div className="service-card__num" style={{ margin: 0, opacity: 0.5 }}>{s.num}</div>
                 </div>
-                <div className="service-card__num">{s.num}</div>
-                <h3 className="service-card__title">{s.title}</h3>
-                <p className="service-card__desc">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </FadeUp>
+                <div style={{ marginTop: "1.5rem" }}>
+                  <h3 className="service-card__title" style={{ fontSize: "1.25rem" }}>{s.title}</h3>
+                  <p className="service-card__desc" style={{ fontSize: "0.95rem" }}>{s.desc}</p>
+                </div>
+            </FadeUp>
+          ))}
+
+          {/* Geo/Exp Card styled to fit the bento grid */}
+          <FadeUp delay={0.3} className="glass-card" style={{ padding: "2.5rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", background: "linear-gradient(135deg, rgba(139,92,246,0.1), rgba(99,102,241,0.1))", border: "1px solid rgba(139,92,246,0.2)"}}>
+             <h3 style={{fontFamily: "var(--font-display)", fontSize: "4rem", fontWeight: 900, color: "var(--accent)", lineHeight: 1, marginBottom: "0.5rem"}}>3+</h3>
+             <p style={{fontFamily: "var(--font-mono)", fontSize: "0.85rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--ink)", fontWeight: 600}}>Years Exp.</p>
+          </FadeUp>
+
+        </div>
       </div>
     </section>
   );

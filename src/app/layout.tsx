@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Cursor from "@/components/ui/Cursor";
 import Intro from "@/components/ui/Intro";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 
 /* ── Fonts ───────────────────────────────────────────────────────── */
 const outfit = Outfit({
@@ -367,9 +368,11 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
 
-        <Intro />
-        <Cursor />
-        {children}
+        <SmoothScroll>
+          <Intro />
+          <Cursor />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

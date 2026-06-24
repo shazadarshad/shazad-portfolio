@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useScroll, useTransform, motion, animate, stagger } from "motion/react";
 import CountUp from "@/components/ui/CountUp";
 import Button from "@/components/ui/Button";
+import Magnetic from "@/components/ui/Magnetic";
 
 const STATS = [
   { to: 50, suffix: "+", label: "Projects" },
@@ -15,6 +16,7 @@ const STATS = [
 export default function Hero() {
   const { scrollY } = useScroll();
   const decoY = useTransform(scrollY, [0, 600], [0, -100]);
+  const heroY = useTransform(scrollY, [0, 800], [0, 200]);
 
   useEffect(() => {
     const EASE = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
@@ -58,8 +60,8 @@ export default function Hero() {
         SHAZAD
       </motion.div>
 
-      {/* Split Layout Column */}
-      <div className="hero__center" style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", textAlign: "left" }}>
+      {/* Split Layout Column with Parallax */}
+      <motion.div className="hero__center" style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", textAlign: "left", y: heroY }}>
 
         <div className="hero__content-left" style={{ flex: 1, minWidth: "300px" }}>
           {/* Status pill */}
@@ -94,10 +96,14 @@ export default function Hero() {
             </p>
 
             <div className="hero__ctas">
-              <Button href="#work" variant="solid">Explore Portfolio</Button>
-              <a href="#contact" className="link-draw" aria-label="Let's Talk">
-                Let&apos;s Talk
-              </a>
+              <Magnetic strength={40}>
+                <Button href="#work" variant="solid">Explore Portfolio</Button>
+              </Magnetic>
+              <Magnetic strength={20}>
+                <a href="#contact" className="link-draw" aria-label="Let's Talk" style={{display: "inline-block"}}>
+                  Let&apos;s Talk
+                </a>
+              </Magnetic>
             </div>
           </div>
         </div>
@@ -110,7 +116,7 @@ export default function Hero() {
               <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Performance Optimized</li>
             </ul>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats bar at bottom */}
       <div

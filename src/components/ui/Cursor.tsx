@@ -20,26 +20,32 @@ export default function Cursor() {
     const tick = () => {
       currentX = lerp(currentX, targetX, 0.14);
       currentY = lerp(currentY, targetY, 0.14);
-      cursor.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+      const isLarge = cursor.classList.contains("cursor--large");
+      const offset = isLarge ? -25 : -6;
+
+      cursor.style.transform = `translate(${currentX + offset}px, ${currentY + offset}px)`;
       rafId = requestAnimationFrame(tick);
     };
 
     const onMouseMove = (e: MouseEvent) => {
-      targetX = e.clientX - 5;
-      targetY = e.clientY - 5;
+      targetX = e.clientX;
+      targetY = e.clientY;
     };
 
     const onMouseOver = (e: MouseEvent) => {
       const el = e.target as Element;
-      if (el.closest("a, button, [role='button'], label")) {
+      if (el.closest("a, button, [role='button'], label, [data-magnetic]")) {
         cursor.classList.add("cursor--large");
+        cursor.innerText = "VIEW";
       }
     };
 
     const onMouseOut = (e: MouseEvent) => {
       const el = e.target as Element;
-      if (el.closest("a, button, [role='button'], label")) {
+      if (el.closest("a, button, [role='button'], label, [data-magnetic]")) {
         cursor.classList.remove("cursor--large");
+        cursor.innerText = "";
       }
     };
 
