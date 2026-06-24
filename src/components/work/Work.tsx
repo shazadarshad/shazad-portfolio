@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { motion, useInView } from "motion/react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SectionLabel from "@/components/ui/SectionLabel";
+import Magnetic from "@/components/ui/Magnetic";
 
 type FilterType = "All" | "Web Dev" | "Design" | "Apps";
 
@@ -78,127 +81,91 @@ const PROJECTS: Project[] = [
 
 const FILTERS: FilterType[] = ["All", "Web Dev", "Design", "Apps"];
 
-const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
-
-const rowVariants = {
-  hidden: { y: 30, opacity: 0 },
-  visible: (i: number) => ({
-    y: 0, opacity: 1,
-    transition: { duration: 0.5, delay: i * 0.07, ease: EASE },
-  }),
-};
-
 export default function Work() {
-  const [filter, setFilter] = useState<FilterType>("All");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const filtered = filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === filter);
-  const featured = filtered.filter((p) => p.featured);
-  const grid = filtered.filter((p) => !p.featured);
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
 
-  const headingRef = useRef<HTMLDivElement>(null);
-  const headingInView = useInView(headingRef, { once: true, margin: "-80px" });
+    if (containerRef.current && scrollRef.current) {
+      const pin = gsap.to(scrollRef.current, {
+        x: () => -(scrollRef.current!.scrollWidth - window.innerWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          pin: true,
+          scrub: 1,
+          end: () => "+=" + scrollRef.current!.scrollWidth,
+        }
+      });
+
+      return () => {
+        pin.kill();
+        ScrollTrigger.getAll().forEach(t => t.kill());
+      };
+    }
+  }, []);
 
   return (
-    <section id="work" className="section" aria-labelledby="work-heading">
-      <motion.div
-        ref={headingRef}
-        initial={{ y: 40, opacity: 0 }}
-        animate={headingInView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
-        transition={{ duration: 0.6, ease: EASE }}
-      >
-        <SectionLabel number="04" label="Work" />
-        <h2 id="work-heading" className="section__heading">
-          Selected Work
-        </h2>
-      </motion.div>
+    <section id="work" ref={containerRef} style={{ overflow: "hidden", height: "100vh", position: "relative", backgroundColor: "transparent" }}>
 
-      {/* Filter tabs */}
-      <div
-        className="work-filters"
-        role="tablist"
-        aria-label="Filter projects"
-        style={{ marginTop: "2rem", marginBottom: "2.5rem" }}
-      >
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            role="tab"
-            aria-selected={filter === f}
-            onClick={() => setFilter(f)}
-            className={`filter-tab${filter === f ? " filter-tab--active" : ""}`}
-          >
-            {f}
-          </button>
-        ))}
+      <div style={{ position: "absolute", top: "4rem", left: "clamp(1.5rem, 5vw, 4rem)", zIndex: 10 }}>
+        <SectionLabel number="03" label="Selected Works" />
+        <h2 className="section__heading" style={{ color: "var(--black)" }}>Projects</h2>
       </div>
 
-      {/* Featured rows */}
-      {featured.length > 0 && (
-        <div className="work-rows" style={{ marginBottom: "2rem" }}>
-          {featured.map((p, i) => (
-            <motion.div
-              key={p.id}
-              className="work-row"
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={rowVariants}
-              role="article"
-              aria-label={p.title}
-            >
-              <span className="work-row__num">{p.num}</span>
-              <div className="work-row__info">
-                <span className="work-row__title">{p.title}</span>
-                <span className="work-row__tagline">{p.tagline}</span>
-              </div>
-              <div className="work-row__tags" aria-label="Technologies used">
+      <div
+        ref={scrollRef}
+        style={{
+          display: "flex",
+          height: "100%",
+          alignItems: "center",
+          paddingLeft: "clamp(1.5rem, 5vw, 4rem)",
+          paddingRight: "clamp(1.5rem, 5vw, 4rem)",
+          gap: "3rem",
+          width: "max-content"
+        }}
+      >
+        {PROJECTS.map((p) => (
+          <div
+            key={p.id}
+            className="glass-card"
+            style={{
+              width: "clamp(300px, 40vw, 500px)",
+              height: "60vh",
+              minHeight: "400px",
+              padding: "2.5rem",
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              overflow: "hidden"
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "auto" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--accent)", letterSpacing: "0.1em" }}>{p.num}</span>
+              <span className="trait-pill">{p.category}</span>
+            </div>
+
+            <div style={{ marginTop: "auto" }}>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", fontWeight: 800, marginBottom: "0.5rem", lineHeight: 1.1 }}>{p.title}</h3>
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--ink)", marginBottom: "1.5rem", fontSize: "1.05rem" }}>{p.desc}</p>
+
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "2rem" }}>
                 {p.tags.map((t) => (
-                  <span key={t} className="work-tag">{t}</span>
+                  <span key={t} style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", padding: "0.2rem 0.6rem", border: "1px solid var(--glass-border)", borderRadius: "9999px" }}>{t}</span>
                 ))}
               </div>
-              <div className="work-row__actions" aria-label="Project links">
-                <span title="View live" aria-label="View live project" style={{ fontSize: "1.1rem" }}>↗</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
 
-      {/* Grid cards */}
-      {grid.length > 0 && (
-        <div className="work-grid">
-          {grid.map((p, i) => (
-            <motion.div
-              key={p.id}
-              className="work-card"
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={rowVariants}
-              role="article"
-              aria-label={p.title}
-            >
-              <div className="work-card__num">{p.num}</div>
-              <h3 className="work-card__title">{p.title}</h3>
-              <div className="work-card__tags">
-                {p.tags.map((t) => (
-                  <span key={t} className="work-tag">{t}</span>
-                ))}
-              </div>
-              <p className="work-card__desc">{p.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {filtered.length === 0 && (
-        <p style={{
-          fontFamily: "var(--font-mono)", fontSize: "0.8rem",
-          color: "var(--gray-500)", padding: "3rem 0", letterSpacing: "0.1em",
-        }}>
-          No projects in this category yet.
-        </p>
-      )}
+              <Magnetic strength={20}>
+                <button className="btn btn--solid" style={{ borderRadius: "9999px", padding: "0.75rem 2rem", width: "100%" }}>
+                  <span className="btn__text">View Project</span>
+                </button>
+              </Magnetic>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

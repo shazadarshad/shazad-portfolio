@@ -15,23 +15,21 @@ const STATS = [
 
 export default function Hero() {
   const { scrollY } = useScroll();
-  const decoY = useTransform(scrollY, [0, 600], [0, -100]);
-  const heroY = useTransform(scrollY, [0, 800], [0, 200]);
+  const textY = useTransform(scrollY, [0, 800], [0, 250]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   useEffect(() => {
-    const EASE = [0.25, 0.46, 0.45, 0.94] as [number, number, number, number];
+    const EASE = [0.76, 0, 0.24, 1] as [number, number, number, number];
 
     const seq = async () => {
-      animate(".hero__badge", { y: [16, 0], opacity: [0, 1] }, { duration: 0.5, ease: EASE });
-
       await animate(
-        ".hero__word-inner",
-        { y: [60, 0], opacity: [0, 1] },
-        { delay: stagger(0.08), duration: 0.7, ease: EASE }
+        ".hero__large-text span",
+        { y: [150, 0], opacity: [0, 1], rotate: [10, 0] },
+        { delay: stagger(0.1), duration: 1.2, ease: EASE }
       );
 
+      animate(".hero__badge", { y: [16, 0], opacity: [0, 1] }, { duration: 0.5, ease: EASE });
       animate(".hero__meta", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, ease: EASE });
-      animate(".hero__content-right", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, delay: 0.1, ease: EASE });
       animate(".hero__stats", { y: [20, 0], opacity: [0, 1] }, { duration: 0.5, delay: 0.15, ease: EASE });
     };
 
@@ -45,7 +43,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero" aria-label="Hero">
+    <section className="hero" aria-label="Hero" style={{ justifyContent: "center", alignItems: "center", minHeight: "100svh", paddingBlock: "0" }}>
       {/* Noise overlay */}
       <svg className="hero__noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
         <filter id="hero-noise">
@@ -55,84 +53,86 @@ export default function Hero() {
         <rect width="100%" height="100%" filter="url(#hero-noise)" />
       </svg>
 
-      {/* Faint watermark deco */}
-      <motion.div className="hero__deco" style={{ y: decoY }} aria-hidden="true">
-        SHAZAD
-      </motion.div>
+      <motion.div style={{ y: textY, opacity, display: "flex", flexDirection: "column", alignItems: "center", width: "100%", paddingInline: "1.5rem" }}>
 
-      {/* Split Layout Column with Parallax */}
-      <motion.div className="hero__center" style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", textAlign: "left", y: heroY }}>
-
-        <div className="hero__content-left" style={{ flex: 1, minWidth: "300px" }}>
-          {/* Status pill */}
-          <div
-            className="hero__badge"
-            role="status"
-            aria-label="Currently available for work"
-            style={{ opacity: 0, marginBottom: "2rem" }}
-          >
-            <span className="hero__status-dot" aria-hidden="true" />
-            Available for work
-          </div>
-
-          {/* Headline */}
-          <h1 className="hero__headline" style={{ alignItems: "flex-start", maxWidth: "100%" }}>
-            <span className="hero__word">
-              <span className="hero__word-inner">Designing &</span>
-            </span>
-            <span className="hero__word">
-              <span className="hero__word-inner">
-                Building Futures
-                <span className="hero__cursor" aria-hidden="true">_</span>
-              </span>
-            </span>
-          </h1>
-
-          {/* Meta — subtitle + CTAs */}
-          <div className="hero__meta" style={{ opacity: 0, alignItems: "flex-start" }}>
-            <p className="hero__subtitle" style={{ textAlign: "left" }}>
-              Creative Developer based in Colombo, Sri Lanka.
-              <br/>Turning complex problems into elegant, glassmorphic web experiences.
-            </p>
-
-            <div className="hero__ctas">
-              <Magnetic strength={40}>
-                <Button href="#work" variant="solid">Explore Portfolio</Button>
-              </Magnetic>
-              <Magnetic strength={20}>
-                <a href="#contact" className="link-draw" aria-label="Let's Talk" style={{display: "inline-block"}}>
-                  Let&apos;s Talk
-                </a>
-              </Magnetic>
-            </div>
-          </div>
+        <div
+          className="hero__badge"
+          role="status"
+          aria-label="Currently available for work"
+          style={{ opacity: 0, marginBottom: "2rem" }}
+        >
+          <span className="hero__status-dot" aria-hidden="true" />
+          Available for work
         </div>
 
-        <div className="hero__content-right glass-card" style={{ flex: 0.8, minWidth: "300px", padding: "2rem", display: "flex", flexDirection: "column", justifyContent: "center", opacity: 0 }} >
-            <h3 style={{fontFamily: "var(--font-display)", fontSize: "1.5rem", marginBottom: "1rem"}}>Quick Facts</h3>
-            <ul style={{listStyle: "none", display: "flex", flexDirection: "column", gap: "1rem", fontFamily: "var(--font-body)", color: "var(--ink)"}}>
-              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Modern React & Next.js</li>
-              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Intuitive UI/UX Design</li>
-              <li style={{display: "flex", alignItems: "center", gap: "0.5rem"}}><span style={{color: "var(--accent)"}}>✦</span> Performance Optimized</li>
-            </ul>
+        <h1 className="hero__large-text" style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(4rem, 12vw, 12rem)",
+          fontWeight: 900,
+          lineHeight: 0.85,
+          letterSpacing: "-0.05em",
+          color: "var(--black)",
+          textAlign: "center",
+          textTransform: "uppercase",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}>
+          <span style={{ display: "block", overflow: "hidden" }}>
+             <span style={{ display: "inline-block", transformOrigin: "left center" }}>CREATIVE</span>
+          </span>
+          <span style={{ display: "block", overflow: "hidden" }}>
+             <span style={{ display: "inline-block", transformOrigin: "left center", color: "var(--accent)" }}>DEVELOPER</span>
+          </span>
+        </h1>
+
+        <div className="hero__meta" style={{ opacity: 0, marginTop: "3rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "2rem" }}>
+          <p className="hero__subtitle" style={{ fontSize: "1.25rem", maxWidth: "600px", textAlign: "center" }}>
+            I craft immersive, award-winning digital experiences from Colombo, Sri Lanka.
+          </p>
+
+          <div className="hero__ctas" style={{ display: "flex", gap: "1.5rem" }}>
+            <Magnetic strength={50}>
+              <div style={{ borderRadius: "9999px" }}>
+                <Button href="#work" variant="solid">View Projects</Button>
+              </div>
+            </Magnetic>
+            <Magnetic strength={30}>
+              <a href="#contact" className="link-draw" style={{ display: "inline-block", padding: "0.8rem 1rem" }}>
+                Let&apos;s Talk
+              </a>
+            </Magnetic>
+          </div>
         </div>
       </motion.div>
 
-      {/* Stats bar at bottom */}
-      <div
-        className="hero__stats"
+      {/* Floating stats bar */}
+      <motion.div
+        className="hero__stats glass-card"
         aria-label="Quick stats"
-        style={{ paddingInline: "clamp(1.5rem, 5vw, 4rem)", paddingBottom: "clamp(2rem, 4svh, 3rem)", opacity: 0 }}
+        style={{
+          position: "absolute",
+          bottom: "2rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "90%",
+          maxWidth: "800px",
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          padding: "1rem 2rem",
+          opacity: 0,
+          border: "1px solid rgba(255,255,255,0.4)"
+        }}
       >
         {STATS.map(({ to, suffix, label }) => (
-          <div key={label} className="hero__stat">
-            <div className="hero__stat-num">
-              <CountUp to={to} suffix={suffix} duration={1.8} />
+          <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="hero__stat-num" style={{ fontSize: "1.5rem", color: "var(--accent)" }}>
+              <CountUp to={to} suffix={suffix} duration={2} />
             </div>
-            <div className="hero__stat-label">{label}</div>
+            <div className="hero__stat-label" style={{ fontSize: "0.6rem" }}>{label}</div>
           </div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

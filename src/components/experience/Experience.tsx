@@ -252,7 +252,19 @@ export default function Experience() {
     <section
       id="experience"
       className="section"
-      style={{ background: "var(--white)" }}
+      style={{
+        position: "relative",
+        zIndex: 2,
+        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        borderTop: "1px solid rgba(255, 255, 255, 0.5)",
+        borderTopLeftRadius: "2rem",
+        borderTopRightRadius: "2rem",
+        boxShadow: "0 -10px 40px rgba(0,0,0,0.05)",
+        marginTop: "-10vh",
+        paddingTop: "5rem"
+      }}
       aria-labelledby="experience-heading"
     >
       <motion.div
@@ -262,7 +274,7 @@ export default function Experience() {
         transition={{ duration: 0.6, ease: EASE }}
         style={{ marginBottom: "3rem" }}
       >
-        <SectionLabel number="05" label="Experience" />
+        <SectionLabel number="04" label="Experience" />
         <h2 id="experience-heading" className="section__heading">My Journey</h2>
       </motion.div>
 

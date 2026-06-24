@@ -112,10 +112,12 @@ function RevealText({ text, delay = 0, className, style }: { text: string; delay
 
 export default function About() {
   return (
-    <section id="about" className="section" aria-labelledby="about-heading">
-      <SectionLabel number="02" label="About Me" />
+    <section id="about" className="section" aria-labelledby="about-heading" style={{ position: "sticky", top: 0, zIndex: 1, backgroundColor: "var(--off-white)", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div style={{ position: "absolute", top: "4rem", left: "clamp(1.5rem, 5vw, 4rem)" }}>
+        <SectionLabel number="02" label="About Me" />
+      </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(3rem, 6vw, 5rem)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "clamp(2rem, 4vw, 3rem)" }}>
         {/* Bento Grid Layout */}
         <div
           style={{
